@@ -89,7 +89,7 @@ getContainerNameByType() {
 }
 
 executeMagerun() {
-    local containerType="installer"
+    local containerType="php"
     local containerName=$(getContainerNameByType "$containerType")
     if [ -z "$containerName" ];
     then
@@ -97,12 +97,12 @@ executeMagerun() {
         return 1
     fi
 
-    $DOCKER exec -ti $containerName magerun --skip-root-check --root-dir="/var/www/html/web" $@
+    $DOCKER exec -ti $containerName magerun --skip-root-check --root-dir="/var/www/html" $@
     return 0
 }
 
 executeComposer() {
-    local containerType="installer"
+    local containerType="php"
     local containerName=$(getContainerNameByType $containerType)
     if [ -z "$containerName" ];
     then
