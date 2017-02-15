@@ -17,17 +17,25 @@ RUN buildDeps=" \
     mbstring \
     mysqli \
     mcrypt \
-    mysql \
     pdo_mysql \
     soap \
     zip \
     && apt-get update -qy && apt-get install -qy git-core \
     && cd /tmp/ && git clone https://github.com/derickr/xdebug.git \
-    && cd xdebug && phpize && ./configure --enable-xdebug && make \
-    && mkdir /usr/lib/php5/ && cp modules/xdebug.so /usr/lib/php5/xdebug.so \
+    && cd xdebug && git checkout tags/XDEBUG_2_2_2 \
+    && phpize && ./configure --enable-xdebug && make \
+    && mkdir /usr/lib/php/ && cp modules/xdebug.so /usr/lib/php/xdebug.so \
     && touch /usr/local/etc/php/ext-xdebug.ini \
     && rm -r /tmp/xdebug && apt-get purge -y git-core \
     && apt-get purge -y --auto-remove
+
+RUN curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/2.2.7.tar.gz \
+    && tar xfz /tmp/redis.tar.gz \
+    && rm -r /tmp/redis.tar.gz \
+    && mkdir /usr/src/php \
+    && mkdir /usr/src/php/ext \
+    && mv phpredis-2.2.7 /usr/src/php/ext/redis \
+    && docker-php-ext-install redis
 
 # Configure
 COPY php.ini /usr/local/etc/php/php.ini

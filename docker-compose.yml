@@ -2,6 +2,7 @@ version: '2'
 services:
   nginx:
     image: nginx:latest
+    container_name: nxing
     ports:
       - "80:80"
       - "443:443"
@@ -19,15 +20,24 @@ services:
       - php
   php:
     build: docker-images/php
+    container_name: php
     links:
       - "mysql:mysql"
     volumes:
       - ..:/var/www/html
+      - ../var:/var/www/html/var
   mysql:
     image: mysql:5.5
+    container_name: mysql
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: pw
+      MYSQL_ROOT_PASSWORD: root
     volumes:
-      - ../var/data/mysql:/var/lib/mysql
+      - ./data/mysql:/var/lib/mysql
+      - ./data/dumps:/home/dumps
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
