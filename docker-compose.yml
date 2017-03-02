@@ -2,7 +2,7 @@ version: '2'
 services:
   nginx:
     image: nginx:latest
-    container_name: nxing
+    container_name: samsung_nginx
     ports:
       - "80:80"
       - "443:443"
@@ -20,7 +20,7 @@ services:
       - php
   php:
     build: docker-images/php
-    container_name: php
+    container_name: samsung_php
     links:
       - "mysql:mysql"
     volumes:
@@ -28,16 +28,16 @@ services:
       - ../var:/var/www/html/var
   mysql:
     image: mysql:5.5
-    container_name: mysql
+    container_name: samsung_mysql
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: pw
     volumes:
       - ./data/mysql:/var/lib/mysql
       - ./data/dumps:/home/dumps
   redis:
     image: redis
-    container_name: redis
+    container_name: samsung_redis
     ports:
       - "6379:6379"
