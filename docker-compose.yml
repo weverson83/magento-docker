@@ -2,7 +2,7 @@ version: '2'
 services:
   nginx:
     image: nginx:latest
-    container_name: samsung_nginx
+    container_name: cancaonova_nginx
     ports:
       - "80:80"
       - "443:443"
@@ -18,17 +18,21 @@ services:
       - ./config/nginx/custom-locations:/etc/nginx/custom-locations
     volumes_from:
       - php
+    networks:
+      - backend
   php:
     build: docker-images/php
-    container_name: samsung_php
+    container_name: cancaonova_php
     links:
       - "mysql:mysql"
     volumes:
       - ..:/var/www/html
       - ../var:/var/www/html/var
+    networks:
+      - backend
   mysql:
-    image: mysql:5.5
-    container_name: samsung_mysql
+    image: mysql:5.6
+    container_name: cancaonova_mysql
     ports:
       - "3306:3306"
     environment:
@@ -38,6 +42,18 @@ services:
       - ./data/dumps:/home/dumps
   redis:
     image: redis
-    container_name: samsung_redis
+    container_name: cancaonova_redis
     ports:
       - "6379:6379"
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
