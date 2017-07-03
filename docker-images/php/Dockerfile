@@ -11,9 +11,12 @@ RUN buildDeps=" \
         g++ \
         golang-go \
         git-core \
+        libmemcached-dev \
     "; \
     set -x \
-    && apt-get update && apt-get install -y $buildDeps --no-install-recommends && rm -rf /var/lib/apt/lists/*
+    && apt-get update \
+    && apt-get install -y $buildDeps --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
 ### Install Mailhog
 ENV GOPATH /tmp
@@ -33,6 +36,9 @@ RUN docker-php-ext-configure \
     soap \
     zip \
     intl \
+    && pecl install memcached-2.2.0 \
+    && pecl install lzf \
+    && docker-php-ext-enable memcached lzf \
     && cd /tmp/ && git clone https://github.com/derickr/xdebug.git \
     && cd xdebug && git checkout tags/XDEBUG_2_2_2 \
     && phpize && ./configure --enable-xdebug && make \

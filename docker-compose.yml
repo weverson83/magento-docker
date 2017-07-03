@@ -2,7 +2,7 @@ version: '2'
 services:
   nginx:
     image: nginx:latest
-    container_name: cancaonova_nginx
+    container_name: m38978234_nginx
     ports:
       - "80:80"
       - "443:443"
@@ -18,21 +18,19 @@ services:
       - ./config/nginx/custom-locations:/etc/nginx/custom-locations
     volumes_from:
       - php
-    networks:
-      - backend
+
   php:
     build: docker-images/php
-    container_name: cancaonova_php
+    container_name: m38978234_php
     links:
       - "mysql:mysql"
     volumes:
       - ..:/var/www/html
       - ../var:/var/www/html/var
-    networks:
-      - backend
+
   mysql:
     image: mysql:5.6
-    container_name: cancaonova_mysql
+    container_name: m38978234_mysql
     ports:
       - "3306:3306"
     environment:
@@ -40,20 +38,28 @@ services:
     volumes:
       - ./data/mysql:/var/lib/mysql
       - ./data/dumps:/home/dumps
+
   redis:
     image: redis
-    container_name: cancaonova_redis
+    container_name: m38978234_redis
     ports:
       - "6379:6379"
 
   mailhog:
     image: mailhog/mailhog
-    container_name: mailhog
+    container_name: m38978234_mailhog
     ports:
       - "1025:1025"
       - "8025:8025"
-    networks:
-      - backend
-networks:
-  backend:
-    driver: bridge
+
+  memcached:
+    image: memcached
+    container_name: m38978234_memcached
+    ports:
+      - "11211:11211"
+
+  varnish:
+    build: docker-images/varnish
+    container_name: m38978234_varnish
+    volumes:
+      - ./config/varnish/etc:/etc/varnish
