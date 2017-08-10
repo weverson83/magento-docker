@@ -12,6 +12,7 @@ RUN buildDeps=" \
         golang-go \
         git-core \
         libmemcached-dev \
+        wget \
     "; \
     set -x \
     && apt-get update \
@@ -53,6 +54,11 @@ RUN curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/2.
     && mkdir /usr/src/php/ext \
     && mv phpredis-2.2.7 /usr/src/php/ext/redis \
     && docker-php-ext-install redis
+
+#PHPUnit compatible with EcomDev module
+RUN cd /tmp/ && wget http://phar.phpunit.de/phpunit-5.5.5.phar \
+    && mv phpunit-5.5.5.phar /usr/local/bin/phpunit \
+    && chmod +x /usr/local/bin/phpunit
 
 # Configure
 COPY php.ini /usr/local/etc/php/php.ini
